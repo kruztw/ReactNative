@@ -1,0 +1,132 @@
+import {
+  SafeAreaView,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
+
+import {
+  Colors,
+} from 'react-native/Libraries/NewAppScreen';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+Ionicons.loadFont().then();
+
+function HomeScreen() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Home!</Text>
+    </View>
+  );
+};
+function SearchScreen() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Serach!</Text>
+    </View>
+  );
+};
+function FavoriteScreen() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Favorite!</Text>
+    </View>
+  );
+};
+function SettingsScreen() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Settings!</Text>
+    </View>
+  );
+}
+
+const Tab = createBottomTabNavigator();
+const routes = [
+  {
+    name: "Home",
+    id: "Home",
+    icon: {
+      ios: "home",
+      android: "home",
+    },
+    component: <HomeScreen />,
+  },
+  {
+    name: "Search",
+    id: "Search",
+    icon: {
+      ios: "search",
+      android: "search",
+    },
+    component: <SearchScreen />,
+  },
+  {
+    name: "Favorite",
+    id: "Favorite",
+    icon: {
+      ios: "heart-circle",
+      android: "heart-circle",
+    },
+    component: <FavoriteScreen />,
+  },
+  {
+    name: "Settings",
+    id: "Settings",
+    icon: {
+      ios: "settings",
+      android: "settings",
+    },
+    component: <SettingsScreen />,
+  }
+]
+
+function App(): JSX.Element {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+  return (
+    <SafeAreaView style={backgroundStyle}>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+
+              for (let i = 0; i < routes.length; i += 1) {
+                if (route.name === routes[i].name) {
+                  iconName = focused ? 
+                               routes[i].icon[Platform.OS === 'ios' ? 'ios' : 'android'] : 
+                               `${routes[i].icon[Platform.OS === 'ios' ? 'ios' : 'android']}-outline`;
+                  break;
+                }
+              }
+
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+          })}
+
+          tabBarOptions={{
+            activeTintColor: 'tomato',
+            inactiveTintColor: 'gray',
+          }}
+        >
+
+          {routes.map((route) => {
+            const EachScene = () => route.component;
+            return (
+              <Tab.Screen name={route.name} component={EachScene} key={route.id} />
+            );
+          })}
+        </Tab.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
+  );
+}
+
+export default App;
